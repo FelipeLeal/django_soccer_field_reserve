@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+<h1>Sistema de reservas</h1>
+{% if field_list %}
+<div class="input-field col s12">
+    <label>
+        <select name="fields">
+            <option value="" disabled selected>Choose your option</option>
+            {% for field in field_list %}
+            <option value="{{ field.id }}">{{ field.name }}</option>
+            {% endfor %}
+            <!--        <option value="1">Option 1</option>-->
+            <!--        <option value="2">Option 2</option>-->
+            <!--        <option value="3">Option 3</option>-->
+        </select>
+        <label>Select a field</label>
+    </label>
+
+</div>
+{% else %}
+<h2>Sin reservas</h2>
+{% endif %}
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        options = {asd: 'asd', qwe: 'asd'}
+        let elems = document.querySelectorAll('select');
+        let instances = M.FormSelect.init(elems, options);
+    });
+</script>
+</body>
+</html>

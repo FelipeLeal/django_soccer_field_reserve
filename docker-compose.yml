@@ -1,0 +1,48 @@
+version: "3.7"
+
+services:
+  web:
+    container_name: www
+    build: ./www
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: always
+    volumes:
+      - type: bind
+        source: ./www
+        target: /code
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./static
+        target: /opt/app/static
+    networks:
+      - backend
+    ports:
+      - "8000:8000"
+    links:
+      - db
+    depends_on:
+      - db
+
+  db:
+    container_name: db_data
+    image: postgres:latest
+    volumes:
+      - db_data_test:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+    environment:
+      - POSTGRES_DB=db_login
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+    expose:
+      - "5432"
+
+networks:
+  backend:
+
+volumes:
+  www:
+  db_data_test:
+    external: true
