@@ -10,7 +10,7 @@
 - Run to start django project
 
 ```shell
-$ docker-compose up
+docker-compose up -d --build web
 ```
 ---
 ### Setup

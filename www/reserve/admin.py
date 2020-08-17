@@ -1,8 +1,11 @@
 from django.contrib import admin
 from django import forms
 from .models import FieldType, Field, Price, Block, Reserve
+from django.core import mail
+from pprint import pprint
+from soccer_field_reserve.settings import EMAIL_USE_TLS, EMAIL_HOST, EMAIL_BACKEND
 
-import datetime
+import os
 
 
 # Register your models here.
@@ -31,17 +34,22 @@ class BlockAdmin(admin.ModelAdmin):
     # def has_change_permission(self, request, obj=None):
     #     return False
 
+
 class ReserveForm(forms.ModelForm):
+    # day = forms.DateField(help_text="Enter a date between now and 4 weeks.")
+
     class Meta:
         model = Reserve
+        fields = ['user', 'day', 'block', 'reserve_price']
 
-    day = forms.DateField(help_text="Enter a date between now and 4 weeks.")
+    # def clean_day(self):
+    #     date = self.cleaned_data.get('day')
+    #     if date < datetime.date.today():
+    #         raise forms.ValidationError(
+    #             'Invalid value - renewal in past'
+    #         )
+    #     return self.cleaned_data
 
-    def clean_day(self):
-        date = self.cleaned_data.get('day')
-        if date < datetime.date.today():
-            raise forms.ValidationError("Invalid date - renewal in past")
-        return self.cleaned_data
 
 class ReserveAdmin(admin.ModelAdmin):
     form = ReserveForm
@@ -50,6 +58,12 @@ class ReserveAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.user = request.user
+        mail.send_mail(
+            subject='Confimarción reserva',
+            message=f"Estimado {obj.user.username}, Su reserva se ha realizado con éxito.",
+            from_email=os.getenv('EMAIL_HOST_USER'),
+            recipient_list=[obj.user.email]
+        )
         super(ReserveAdmin, self).save_model(request, obj, form, change)
 
 

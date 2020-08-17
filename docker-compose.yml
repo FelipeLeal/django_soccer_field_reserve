@@ -1,8 +1,42 @@
 version: "3.7"
 
 services:
+  redis:
+    container_name: redis
+    image: redis:alpine
+    networks:
+      - backend
+  db:
+    container_name: db_data
+    image: postgres:latest
+    volumes:
+      - db_data_test:/var/lib/postgresql/data
+    networks:
+      - backend
+    restart: always
+    environment:
+      - POSTGRES_DB=db_login
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=secret
+    expose:
+      - "5432"
+  celery:
+    container_name: celery
+    env_file:
+      - .env
+    build: ./www
+    command: celery -A soccer_field_reserve worker -l info
+    volumes:
+      - ./www:/code
+    depends_on:
+      - db
+      - redis
+    networks:
+      - backend
   web:
     container_name: www
+    env_file:
+      - .env
     build: ./www
     command: python manage.py runserver 0.0.0.0:8000
     restart: always
@@ -23,21 +57,8 @@ services:
       - db
     depends_on:
       - db
-
-  db:
-    container_name: db_data
-    image: postgres:latest
-    volumes:
-      - db_data_test:/var/lib/postgresql/data
-    networks:
-      - backend
-    restart: always
-    environment:
-      - POSTGRES_DB=db_login
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=secret
-    expose:
-      - "5432"
+      - redis
+      - celery
 
 networks:
   backend:

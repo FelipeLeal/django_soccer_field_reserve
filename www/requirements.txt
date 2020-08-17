@@ -2,3 +2,6 @@ Django
 djangorestframework
 psycopg2
 PyJWT
+celery
+redis
+django-celery-email
