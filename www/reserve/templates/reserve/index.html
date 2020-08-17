@@ -13,19 +13,13 @@
 <h1>Sistema de reservas</h1>
 {% if field_list %}
 <div class="input-field col s12">
-    <label>
-        <select name="fields">
-            <option value="" disabled selected>Choose your option</option>
-            {% for field in field_list %}
-            <option value="{{ field.id }}">{{ field.name }}</option>
-            {% endfor %}
-            <!--        <option value="1">Option 1</option>-->
-            <!--        <option value="2">Option 2</option>-->
-            <!--        <option value="3">Option 3</option>-->
-        </select>
-        <label>Select a field</label>
-    </label>
-
+    <select name="fields">
+        <option value="" disabled selected>Choose your option</option>
+        {% for field in field_list %}
+        <option value="{{ field.id }}">{{ field.name }}</option>
+        {% endfor %}
+    </select>
+    <label>Select a field</label>
 </div>
 {% else %}
 <h2>Sin reservas</h2>

@@ -14,6 +14,8 @@ docker-compose up -d --build web
 ```
 ---
 ### Setup
+First add your own `.env` file to root project, you can use the .env-example
+
 #### Admin user
 ```ini
 user: 'admin'
